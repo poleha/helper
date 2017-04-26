@@ -1,6 +1,7 @@
 import string
-import random
+
 from . import app_settings
+
 
 def transliterate(text):
     text = text.lower()
@@ -47,18 +48,20 @@ def transliterate(text):
         res += s
     return res
 
+
 def trim_title(text):
-    text = text.replace(' ', ' ') #Это не пробел, а какой-то гнилой символ
+    text = text.replace(' ', ' ')  # Это не пробел, а какой-то гнилой символ
     text = text.encode('utf8').replace('и'.encode('utf8') + b'\xcc\x86', 'й'.encode('utf8')).decode('utf8')
     text = text.strip()
     return text
+
 
 def full_trim(text):
     text = text.replace(':', '_')
     text = text.replace('»', '_')
     text = text.replace('№', '_')
     text = text.replace('«', '_')
-    text = text.replace(' ', '_') #Это не пробел, а какой-то гнилой символ
+    text = text.replace(' ', '_')  # Это не пробел, а какой-то гнилой символ
     text = text.replace('…', '_')
     text = text.replace('-', '_')
     text = text.replace('–', '_')
@@ -104,6 +107,7 @@ def full_trim(text):
     text = text.strip()
     return text
 
+
 def make_alias(text):
     return transliterate(full_trim(text))
 
@@ -114,12 +118,14 @@ def cut_text(text, length=100):
         res += '...'
     return res
 
+
 def check_bad_words(text):
     bad_words = app_settings.BAD_WORDS
     for bad_word in bad_words:
         if bad_word in text:
             return True
     return False
+
 
 def get_digits_percent(text):
     total = len(text)
@@ -131,6 +137,7 @@ def get_digits_percent(text):
             digits_count += text.count(digit)
 
     return (digits_count / total) * 100
+
 
 def get_endlish_letters_percent(text):
     text = text.lower()
@@ -145,15 +152,14 @@ def get_endlish_letters_percent(text):
 
     return (engs_count / total) * 100
 
+
 def comment_body_ok(text):
-    text = text.strip()
-    text = text.replace("\r","")
-    text = text.replace("\n","")
-    text = text.replace(" ","")
+    text = text.strip().lower().replace("\r", "").replace("\n", "").replace(" ", "")
     if get_digits_percent(text) > 60 or get_endlish_letters_percent(text) > 60 or check_bad_words(text):
         return False
     else:
         return True
+
 
 def comment_author_ok(text):
     if check_bad_words(text):
@@ -161,8 +167,10 @@ def comment_author_ok(text):
     else:
         return True
 
+
 def myround(x, base):
-    return int(base * round(float(x)/base))
+    return int(base * round(float(x) / base))
+
 
 def to_int(val):
     try:
@@ -170,4 +178,3 @@ def to_int(val):
     except:
         res = 0
     return res
-

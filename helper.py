@@ -139,6 +139,16 @@ def get_digits_percent(text):
     return (digits_count / total) * 100
 
 
+def get_digits_count(text):
+    digits = map(str, range(10))
+    digits_count = 0
+
+    for digit in digits:
+        if digit in text:
+            digits_count += text.count(digit)
+    return digits_count
+
+
 def get_endlish_letters_percent(text):
     text = text.lower()
 
@@ -155,7 +165,8 @@ def get_endlish_letters_percent(text):
 
 def comment_body_ok(text):
     text = text.strip().lower().replace("\r", "").replace("\n", "").replace(" ", "")
-    if get_digits_percent(text) > 60 or get_endlish_letters_percent(text) > 60 or check_bad_words(text):
+    if get_digits_count(text) > 6 or get_digits_percent(text) > 60 or get_endlish_letters_percent(
+            text) > 60 or check_bad_words(text):
         return False
     else:
         return True
